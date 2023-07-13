@@ -4,6 +4,28 @@
 		<meta http-equiv="X-UA-Compatible" content="IE-Edge">
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<title>Mi Pagina Web</title>
+		<style>
+			/*MOD:: El estilo debe de cargarse en el header para que se apliquen antes de que se renderice la pagina*/
+			.table{
+				padding: 8px;
+				border: 1px solid #ddd;        
+				border-collapse: collapse;
+				font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+				font-size: 14px;
+	
+			}
+			.encabezado {  		
+				padding: 8px;
+				margin-bottom: 1rem;          
+				border-radius: 1px;        
+				background-color: #3DACB6;
+				color: #FFFFFF;
+			}
+			.filas{
+				border: 1px solid #f4f4f4;
+				padding: 8px;
+			}
+		</style>
 	</head>
 	<body>
 		
@@ -32,41 +54,31 @@
 		        </div>
 		    </div>
 		</form>
-	<input type="hidden" id="ruta" name="num_mesero" value="<?php echo $Server; ?>">
+		<input type="hidden" id="ruta" name="num_mesero" value="<?php echo $Server; ?>">
+		<script>
+			/*MOD:: El javascript debe ser cargado en el body para garantizar que se ejecuten cuando este cargada la pagina*/
+			function CallApiRest()
+			{
+				//MOD:: Se integra un request para poder hacer uso de los datos del backend
+				FilasRespuesta 	= 	"";
+				var xhr = new XMLHttpRequest();
+				xhr.open("GET", "../backend/index.php", true);
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState === 4 && xhr.status === 200) {
+						var response = JSON.parse(xhr.responseText);
+						for (var a of response.listaobjetos) {
+							FilasRespuesta 	+= 	"<tr>" +
+												"<td class = 'filas'>" + a.tipo + "</td>" +
+												"<td class = 'filas'>" + a.color + "</td>" +
+												"<td class = 'filas'>" + a.tamanio + "</td>" +
+											"</tr>";
+						}
+						document.querySelector("#filaRespuesta").innerHTML = FilasRespuesta;
+					}
+				};
+				xhr.send();
+			}
+		</script> 
 	</body>
-	<style>
-		.table{
-			padding: 8px;
-			border: 1px solid #ddd;        
-			border-collapse: collapse;
-			font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-			font-size: 14px;
-
-		}
-		.encabezado {  		
-		    padding: 8px;
-		    margin-bottom: 1rem;          
-		    border-radius: 1px;        
-		    background-color: #3DACB6;
-			color: #FFFFFF;
-		}
-		.filas{
-			border: 1px solid #f4f4f4;
-			padding: 8px;
-		}
-	</style>
+	
 </html>
-<script>
-	function CallApiRest()
-	{
-		FilasRespuesta = "";
-
-		FilasRespuesta 	+= 	"<tr>" +
-		        				"<td class = 'filas'>avion</td>" +
-		            			"<td class = 'filas'>grande</td>" +
-		            			"<td class = 'filas'>verde</td>" +
-		            		"</tr>";
-	    document.querySelector("#filaRespuesta").innerHTML = FilasRespuesta;
-
-	}
-</script> 
